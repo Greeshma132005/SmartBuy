@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Import routes
-const productRoutes = require("./routes/productRoutes");
+const productRoutes = require("./productRoutes");
 
 // Use routes
 app.use("/api/products", productRoutes);
