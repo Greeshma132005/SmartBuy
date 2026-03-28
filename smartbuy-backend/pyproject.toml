@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "smartbuy-backend"
+version = "0.1.0"
+description = "SmartBuy - E-commerce price comparison, tracking & prediction backend"
+authors = ["SmartBuy Team"]
+license = "MIT"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.0"
+uvicorn = {extras = ["standard"], version = "^0.34.0"}
+supabase = "^2.11.0"
+httpx = "^0.28.0"
+beautifulsoup4 = "^4.12.0"
+selectolax = "^0.3.0"
+pandas = "^2.2.0"
+numpy = "^2.0.0"
+scikit-learn = "^1.6.0"
+apscheduler = "^3.10.0"
+python-dotenv = "^1.0.0"
+pydantic-settings = "^2.7.0"
+thefuzz = {extras = ["speedup"], version = "^0.22.0"}
+cachetools = "^5.5.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.0"}
+alembic = "^1.14.0"
+psycopg2-binary = "^2.9.0"
+email-validator = "^2.3.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.25.0"
+ruff = "^0.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
