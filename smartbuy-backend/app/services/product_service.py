@@ -22,6 +22,7 @@ def create_product(
     category: str | None = None,
     image_url: str | None = None,
     description: str | None = None,
+    google_product_id: str | None = None,
 ) -> dict | None:
     """Insert a new product and return the created row."""
     try:
@@ -36,6 +37,8 @@ def create_product(
             payload["image_url"] = image_url
         if description is not None:
             payload["description"] = description
+        if google_product_id is not None:
+            payload["google_product_id"] = google_product_id
 
         result = db.table("products").insert(payload).execute()
         if result.data:
@@ -102,6 +105,7 @@ def find_or_create_product(
     name: str,
     category: str | None = None,
     image_url: str | None = None,
+    google_product_id: str | None = None,
 ) -> dict | None:
     """Find an existing product by fuzzy name match, or create a new one.
 
@@ -110,7 +114,20 @@ def find_or_create_product(
     """
     try:
         db = get_db()
-        # Try a fuzzy match first
+
+        # Try lookup by google_product_id first (exact match)
+        if google_product_id:
+            result = (
+                db.table("products")
+                .select("*")
+                .eq("google_product_id", google_product_id)
+                .limit(1)
+                .execute()
+            )
+            if result.data:
+                return result.data[0]
+
+        # Try a fuzzy name match
         result = (
             db.table("products")
             .select("*")
@@ -119,7 +136,17 @@ def find_or_create_product(
             .execute()
         )
         if result.data:
-            return result.data[0]
+            # Update google_product_id if we have one and the product doesn't
+            existing = result.data[0]
+            if google_product_id and not existing.get("google_product_id"):
+                try:
+                    db.table("products").update(
+                        {"google_product_id": google_product_id}
+                    ).eq("id", existing["id"]).execute()
+                    existing["google_product_id"] = google_product_id
+                except Exception:
+                    pass
+            return existing
 
         # No existing product found — create one
         slug = _slugify(name)
@@ -128,6 +155,7 @@ def find_or_create_product(
             slug=slug,
             category=category,
             image_url=image_url,
+            google_product_id=google_product_id,
         )
     except Exception:
         logger.exception("Failed to find or create product: %s", name)

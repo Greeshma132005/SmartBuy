@@ -86,6 +86,7 @@ async def search_products(
         product_dict = find_or_create_product(
             name=group["name"],
             image_url=group.get("image_url"),
+            google_product_id=group.get("google_product_id"),
         )
         if product_dict is None:
             logger.warning("Skipping group — could not persist product: %s", group["name"])

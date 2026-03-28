@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     scraping_delay_min: float = 2.0
     scraping_delay_max: float = 3.0
     scraping_interval_hours: int = 6
+    rapidapi_key: str = ""  # RapidAPI key for Real-Time Product Search
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

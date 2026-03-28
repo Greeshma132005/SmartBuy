@@ -10,6 +10,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from app.config import get_settings
 from app.database import get_db
 from app.scrapers.amazon import AmazonScraper
+from app.scrapers.google_shopping import GoogleShoppingClient
 from app.services.product_service import store_price_record
 
 logger = logging.getLogger(__name__)
@@ -28,8 +29,28 @@ async def scheduled_price_update() -> None:
 
     try:
         db = get_db()
-        result = db.table("products").select("*").execute()
-        products = result.data or []
+
+        # Only refresh products that have active price alerts (saves API quota)
+        alerts_result = (
+            db.table("price_alerts")
+            .select("product_id")
+            .eq("is_active", True)
+            .execute()
+        )
+        alert_product_ids = list({r["product_id"] for r in (alerts_result.data or [])})
+
+        if alert_product_ids:
+            products_result = (
+                db.table("products")
+                .select("*")
+                .in_("id", alert_product_ids)
+                .execute()
+            )
+            products = products_result.data or []
+        else:
+            # No active alerts — refresh all products via scrapers
+            result = db.table("products").select("*").execute()
+            products = result.data or []
 
         if not products:
             logger.info("No products to update")
@@ -37,6 +58,7 @@ async def scheduled_price_update() -> None:
 
         logger.info("Updating prices for %d products", len(products))
 
+        google_client = GoogleShoppingClient()
         scraper = AmazonScraper()
 
         try:
@@ -44,24 +66,36 @@ async def scheduled_price_update() -> None:
                 try:
                     product_name = product.get("name", "")
                     product_id = product.get("id", "")
+                    google_id = product.get("google_product_id")
 
                     if not product_name or not product_id:
-                        logger.warning(
-                            "Skipping product with missing name or id: %s", product
-                        )
                         continue
 
-                    logger.info("Scraping prices for: %s", product_name)
-                    search_results = await scraper.search(product_name)
+                    search_results = []
+
+                    # Try Google Shopping API first (1 call per product)
+                    if google_id and google_client.enabled:
+                        logger.info("Refreshing via API: %s", product_name)
+                        offers_response = await google_client.get_product_offers(
+                            google_id, country="in",
+                        )
+                        if offers_response:
+                            search_results = google_client.parse_offers(
+                                offers_response, product_name=product_name,
+                            )
+
+                    # Fallback to scraper
+                    if not search_results:
+                        logger.info("Refreshing via scraper: %s", product_name)
+                        search_results = await scraper.search(product_name)
 
                     for item in search_results:
                         price = item.get("price")
                         if price is None:
                             continue
-
                         store_price_record(
                             product_id=product_id,
-                            platform=item.get("platform", "amazon"),
+                            platform=item.get("platform", "unknown"),
                             price=price,
                             original_price=item.get("original_price"),
                             product_url=item.get("product_url"),
@@ -70,8 +104,7 @@ async def scheduled_price_update() -> None:
 
                     logger.info(
                         "Stored %d price records for '%s'",
-                        len(search_results),
-                        product_name,
+                        len(search_results), product_name,
                     )
 
                 except Exception:
@@ -82,6 +115,7 @@ async def scheduled_price_update() -> None:
                     continue
         finally:
             await scraper.close()
+            await google_client.close()
 
         # Check for price alerts
         try:
