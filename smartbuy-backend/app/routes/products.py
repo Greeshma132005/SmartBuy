@@ -3,8 +3,9 @@
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Query, HTTPException, Header, status
+from fastapi import APIRouter, Depends, Query, HTTPException, Header, status
 
+from app.auth.dependencies import get_current_user
 from app.scrapers.manager import ScraperManager
 from app.services.product_service import (
     find_or_create_product,
@@ -52,19 +53,18 @@ def _extract_user_id(authorization: str | None) -> str | None:
 @router.get("/search", response_model=SearchResponse)
 async def search_products(
     q: str = Query(..., min_length=1, description="Search query"),
-    authorization: Optional[str] = Header(None),
+    user: dict = Depends(get_current_user),
 ):
     """Search for products across all platforms and return comparison results.
 
-    The endpoint scrapes Amazon, Flipkart, and Croma concurrently, deduplicates
-    the results by fuzzy name matching, persists products and price records, and
+    Requires authentication. Scrapes platforms concurrently, deduplicates
+    results by fuzzy name matching, persists products and price records, and
     returns a structured comparison.
     """
-    logger.info("Product search initiated: q='%s'", q)
+    logger.info("Product search initiated: q='%s' by user=%s", q, user["id"])
 
-    # Optionally log the search if the caller is authenticated
-    user_id = _extract_user_id(authorization)
-    log_search(user_id=user_id, query=q)
+    # Log search history for the authenticated user
+    log_search(user_id=user["id"], query=q)
 
     # Scrape all platforms concurrently
     manager = ScraperManager()
