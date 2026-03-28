@@ -152,3 +152,24 @@ class PriceStats(BaseModel):
     avg_price: float
     current_price: float
     platform: str
+
+
+# ── Deal Verdict ─────────────────────────────────────────────────────────
+
+class DealVerdictResponse(BaseModel):
+    verdict: str
+    title: str
+    description: str
+    current_lowest: float
+    current_platform: str
+    all_time_low: float
+    all_time_low_platform: str
+    all_time_high: float
+    average_30d: float
+    percent_vs_average: float
+    percent_vs_all_time_low: float
+    price_position: float
+    confidence: str
+    confidence_reason: str
+    data_points: int
+    color: str

@@ -106,3 +106,22 @@ export interface AuthResponse {
   refresh_token: string;
   user: AuthUser;
 }
+
+export interface DealVerdict {
+  verdict: 'GREAT_DEAL' | 'GOOD_PRICE' | 'FAIR_PRICE' | 'WAIT' | 'UNKNOWN';
+  title: string;
+  description: string;
+  current_lowest: number;
+  current_platform: string;
+  all_time_low: number;
+  all_time_low_platform: string;
+  all_time_high: number;
+  average_30d: number;
+  percent_vs_average: number;
+  percent_vs_all_time_low: number;
+  price_position: number;
+  confidence: 'high' | 'medium' | 'low';
+  confidence_reason: string;
+  data_points: number;
+  color: 'green' | 'teal' | 'amber' | 'red' | 'gray';
+}

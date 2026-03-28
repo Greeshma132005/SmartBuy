@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { TrendingUp, Search, ShoppingBag, Zap } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import SearchBar from "@/components/SearchBar";
 import ProductCard from "@/components/ProductCard";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useProductSearch } from "@/hooks/useProducts";
@@ -20,16 +21,25 @@ const TRENDING_SEARCHES = [
 ];
 
 export default function HomePage() {
+  const router = useRouter();
   const { user, signOut } = useAuth();
   const { results, loading, error, search } = useProductSearch();
   const [hasSearched, setHasSearched] = React.useState(false);
 
   const handleSearch = (query: string) => {
+    if (!user) {
+      router.push("/auth/login?redirect=/&reason=search");
+      return;
+    }
     setHasSearched(true);
     search(query);
   };
 
   const handleTrendingClick = (term: string) => {
+    if (!user) {
+      router.push("/auth/login?redirect=/&reason=search");
+      return;
+    }
     setHasSearched(true);
     search(term);
   };
@@ -240,6 +250,9 @@ export default function HomePage() {
           )}
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

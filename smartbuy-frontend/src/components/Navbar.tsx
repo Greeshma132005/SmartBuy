@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ShoppingBag, User, LogOut, Home, LayoutDashboard } from "lucide-react";
+import { ShoppingBag, User, LogOut, Home, LayoutDashboard, BookOpen, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { AuthUser } from "@/types";
@@ -32,10 +32,24 @@ export default function Navbar({ user, onSignOut }: NavbarProps) {
               Home
             </Button>
           </Link>
-          <Link href="/dashboard">
+          {user && (
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="gap-1.5">
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </Button>
+            </Link>
+          )}
+          <Link href="/blog">
             <Button variant="ghost" size="sm" className="gap-1.5">
-              <LayoutDashboard className="h-4 w-4" />
-              Dashboard
+              <BookOpen className="h-4 w-4" />
+              Blog
+            </Button>
+          </Link>
+          <Link href="/faq">
+            <Button variant="ghost" size="sm" className="gap-1.5">
+              <HelpCircle className="h-4 w-4" />
+              FAQ
             </Button>
           </Link>
         </nav>
@@ -85,10 +99,24 @@ export default function Navbar({ user, onSignOut }: NavbarProps) {
             Home
           </Button>
         </Link>
-        <Link href="/dashboard">
+        {user && (
+          <Link href="/dashboard">
+            <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
+              <LayoutDashboard className="h-3.5 w-3.5" />
+              Dashboard
+            </Button>
+          </Link>
+        )}
+        <Link href="/blog">
           <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
-            <LayoutDashboard className="h-3.5 w-3.5" />
-            Dashboard
+            <BookOpen className="h-3.5 w-3.5" />
+            Blog
+          </Button>
+        </Link>
+        <Link href="/faq">
+          <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
+            <HelpCircle className="h-3.5 w-3.5" />
+            FAQ
           </Button>
         </Link>
       </nav>

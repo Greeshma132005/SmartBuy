@@ -7,6 +7,7 @@ import {
   getPriceHistory,
   getPricePrediction,
   getProductCoupons,
+  getDealVerdict,
 } from "@/lib/api";
 import type {
   SearchResponse,
@@ -15,6 +16,7 @@ import type {
   PriceStats,
   PricePredictionResponse,
   Coupon,
+  DealVerdict,
 } from "@/types";
 
 export function useProductSearch() {
@@ -48,6 +50,8 @@ export function useProductDetail(productId: string) {
     null
   );
   const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [verdict, setVerdict] = useState<DealVerdict | null>(null);
+  const [verdictLoading, setVerdictLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -99,6 +103,18 @@ export function useProductDetail(productId: string) {
     }
   }, [productId]);
 
+  const fetchVerdict = useCallback(async () => {
+    setVerdictLoading(true);
+    try {
+      const data = await getDealVerdict(productId);
+      setVerdict(data);
+    } catch {
+      // verdict may not be available
+    } finally {
+      setVerdictLoading(false);
+    }
+  }, [productId]);
+
   return {
     product,
     prices,
@@ -106,11 +122,14 @@ export function useProductDetail(productId: string) {
     priceStats,
     prediction,
     coupons,
+    verdict,
+    verdictLoading,
     loading,
     error,
     fetchProduct,
     fetchPriceHistory,
     fetchPrediction,
     fetchCoupons,
+    fetchVerdict,
   };
 }

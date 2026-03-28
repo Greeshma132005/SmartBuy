@@ -1,6 +1,7 @@
-"""Price history and prediction endpoints."""
+"""Price history, prediction, and deal verdict endpoints."""
 
 import logging
+from dataclasses import asdict
 from typing import Optional
 
 import pandas as pd
@@ -9,6 +10,7 @@ from fastapi import APIRouter, Query, HTTPException, status
 from app.services.price_service import (
     get_price_history,
     get_price_stats,
+    get_latest_prices,
     store_prediction,
 )
 from app.services.product_service import get_product
@@ -131,3 +133,28 @@ async def predict_product_prices(
         trend=result["trend"],
         summary=result["summary"],
     )
+
+
+@router.get("/{product_id}/verdict")
+async def get_deal_verdict(product_id: str):
+    """Get AI deal verdict — is this a good time to buy?"""
+    from app.services.verdict_service import calculate_verdict
+
+    # Verify product exists
+    product_dict = get_product(product_id)
+    if not product_dict:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Product not found: {product_id}",
+        )
+
+    # Get current prices (latest per platform)
+    current_prices = get_latest_prices(product_id)
+
+    # Get historical prices (last 90 days)
+    history = get_price_history(product_id, days=90)
+
+    # Calculate verdict
+    verdict = calculate_verdict(current_prices, history)
+
+    return asdict(verdict)

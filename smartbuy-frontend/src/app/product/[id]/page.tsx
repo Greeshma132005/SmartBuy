@@ -12,8 +12,11 @@ import {
   Ticket,
   Loader2,
   AlertCircle,
+  Share2,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import ShareButton from "@/components/ShareButton";
+import DealVerdictCard from "@/components/DealVerdictCard";
 import PriceComparisonTable from "@/components/PriceComparisonTable";
 import PriceHistoryChart from "@/components/PriceHistoryChart";
 import PricePredictionBadge from "@/components/PricePredictionBadge";
@@ -41,12 +44,15 @@ export default function ProductDetailPage() {
     priceHistory,
     prediction,
     coupons,
+    verdict,
+    verdictLoading,
     loading,
     error,
     fetchProduct,
     fetchPriceHistory,
     fetchPrediction,
     fetchCoupons,
+    fetchVerdict,
   } = useProductDetail(productId);
 
   const [alertOpen, setAlertOpen] = useState(false);
@@ -59,8 +65,9 @@ export default function ProductDetailPage() {
       fetchPriceHistory();
       fetchPrediction();
       fetchCoupons();
+      fetchVerdict();
     }
-  }, [productId, fetchProduct, fetchPriceHistory, fetchPrediction, fetchCoupons]);
+  }, [productId, fetchProduct, fetchPriceHistory, fetchPrediction, fetchCoupons, fetchVerdict]);
 
   const handleDateRangeChange = (days: number) => {
     fetchPriceHistory(undefined, days || undefined);
@@ -80,6 +87,28 @@ export default function ProductDetailPage() {
   const lowestPrice = prices.length > 0
     ? Math.min(...prices.map((p) => p.price))
     : null;
+
+  const lowestPricePlatform = prices.length > 0
+    ? prices.reduce((min, p) => (p.price < min.price ? p : min), prices[0]).platform
+    : "";
+
+  const [canNativeShare, setCanNativeShare] = useState(false);
+  useEffect(() => {
+    setCanNativeShare(typeof navigator !== "undefined" && !!navigator.share);
+  }, []);
+
+  const handleNativeShare = async () => {
+    if (!product) return;
+    try {
+      await navigator.share({
+        title: `${product.name} — Best Price Comparison`,
+        text: `Best price: ₹${lowestPrice?.toLocaleString("en-IN")} on ${lowestPricePlatform}. Compared across ${prices.length} platforms.`,
+        url: window.location.href,
+      });
+    } catch {
+      // User cancelled
+    }
+  };
 
   // ── Loading State ────────────────────────────────────────────────────────────
   if (loading) {
@@ -232,6 +261,15 @@ export default function ProductDetailPage() {
                   <Bell className="h-4 w-4" />
                   Set Price Alert
                 </Button>
+                {lowestPrice !== null && (
+                  <ShareButton
+                    productId={productId}
+                    productName={product.name}
+                    bestPrice={lowestPrice}
+                    bestPlatform={lowestPricePlatform}
+                    platformCount={prices.length}
+                  />
+                )}
               </div>
 
               {/* Alert success toast */}
@@ -243,6 +281,11 @@ export default function ProductDetailPage() {
               )}
             </div>
           </div>
+
+          <Separator className="my-10" />
+
+          {/* Deal Verdict */}
+          <DealVerdictCard verdict={verdict} loading={verdictLoading} />
 
           <Separator className="my-10" />
 
@@ -325,6 +368,19 @@ export default function ProductDetailPage() {
           onClose={() => setAlertOpen(false)}
           open={alertOpen}
         />
+      )}
+
+      {/* Mobile floating share button */}
+      {canNativeShare && lowestPrice !== null && (
+        <div className="fixed bottom-6 right-6 z-50 md:hidden">
+          <button
+            onClick={handleNativeShare}
+            aria-label="Share this deal"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white shadow-lg transition-colors hover:bg-emerald-700"
+          >
+            <Share2 className="h-5 w-5" />
+          </button>
+        </div>
       )}
     </div>
   );

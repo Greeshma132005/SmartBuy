@@ -50,6 +50,15 @@ export async function getPricePrediction(productId: string, platform?: string) {
   return data;
 }
 
+export async function getDealVerdict(productId: string) {
+  try {
+    const { data } = await api.get(`/api/products/${productId}/verdict`);
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 // ── Coupons ──────────────────────────────────────────────────────────────────
 
 export async function getCoupons(platform?: string, category?: string) {

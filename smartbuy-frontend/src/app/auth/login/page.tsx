@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ShoppingBag, Mail, Lock, Loader2, AlertCircle } from "lucide-react";
+import { ShoppingBag, Mail, Lock, Loader2, AlertCircle, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,6 +18,9 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const reason = searchParams.get("reason");
+  const redirectUrl = searchParams.get("redirect");
   const { user, loading: authLoading, signIn, signInWithGoogle } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -28,9 +31,9 @@ export default function LoginPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (!authLoading && user) {
-      router.push("/dashboard");
+      router.push(redirectUrl || "/dashboard");
     }
-  }, [authLoading, user, router]);
+  }, [authLoading, user, router, redirectUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +47,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signIn(email, password);
-      router.push("/dashboard");
+      router.push(redirectUrl || "/dashboard");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Sign in failed. Please try again."
@@ -97,6 +100,14 @@ export default function LoginPage() {
             Sign in to access your dashboard and alerts
           </p>
         </div>
+
+        {/* Search reason info banner */}
+        {reason === "search" && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-indigo-500/30 bg-indigo-500/10 p-3 text-sm text-indigo-300">
+            <Info className="h-4 w-4 shrink-0" />
+            <span>Sign in to search and compare prices across platforms</span>
+          </div>
+        )}
 
         <Card className="border-slate-800 bg-slate-900/80 backdrop-blur-sm">
           <CardHeader className="pb-4">
