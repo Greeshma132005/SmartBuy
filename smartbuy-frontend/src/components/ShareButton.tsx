@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Share2, Check, Link, Send, MessageCircle, ExternalShare } from "lucide-react";
+import { Share2, Check, Link, Send, MessageCircle, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ShareButtonProps {
