@@ -98,7 +98,7 @@ export default function SignupPage() {
   // Don't render form while checking auth
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950">
+      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-slate-950">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-400" />
       </div>
     );
@@ -107,7 +107,7 @@ export default function SignupPage() {
   if (user) return null;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-slate-950 px-4">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/30 via-slate-950 to-emerald-950/20" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent" />
@@ -117,18 +117,18 @@ export default function SignupPage() {
         <div className="mb-8 flex flex-col items-center">
           <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <ShoppingBag className="h-8 w-8 text-indigo-400" />
-            <span className="text-2xl font-bold tracking-tight text-slate-50">
+            <span className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
               SmartBuy
             </span>
           </Link>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             Create an account to track prices and set alerts
           </p>
         </div>
 
-        <Card className="border-slate-800 bg-slate-900/80 backdrop-blur-sm">
+        <Card className="border-slate-200 bg-slate-50/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/80">
           <CardHeader className="pb-4">
-            <CardTitle className="text-center text-lg text-slate-100">
+            <CardTitle className="text-center text-lg text-slate-900 dark:text-slate-100">
               Create your account
             </CardTitle>
           </CardHeader>
@@ -154,7 +154,7 @@ export default function SignupPage() {
             <Button
               type="button"
               variant="outline"
-              className="w-full gap-2 border-slate-700 bg-slate-800/50 text-slate-200 hover:bg-slate-800 hover:text-slate-50"
+              className="w-full gap-2 border-slate-300 bg-slate-100/50 text-slate-800 hover:bg-slate-100 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-slate-50"
               onClick={handleGoogleSignUp}
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24">
@@ -181,7 +181,7 @@ export default function SignupPage() {
             {/* Divider */}
             <div className="relative">
               <Separator />
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900 px-2 text-xs text-slate-500">
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-50 px-2 text-xs text-slate-500 dark:bg-slate-900 dark:text-slate-500">
                 or
               </span>
             </div>
@@ -191,12 +191,12 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <label
                   htmlFor="email"
-                  className="text-sm font-medium text-slate-300"
+                  className="text-sm font-medium text-slate-700 dark:text-slate-300"
                 >
                   Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-500" />
                   <Input
                     id="email"
                     type="email"
@@ -213,12 +213,12 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <label
                   htmlFor="password"
-                  className="text-sm font-medium text-slate-300"
+                  className="text-sm font-medium text-slate-700 dark:text-slate-300"
                 >
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-500" />
                   <Input
                     id="password"
                     type="password"
@@ -235,12 +235,12 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <label
                   htmlFor="confirm-password"
-                  className="text-sm font-medium text-slate-300"
+                  className="text-sm font-medium text-slate-700 dark:text-slate-300"
                 >
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-500" />
                   <Input
                     id="confirm-password"
                     type="password"
@@ -271,8 +271,8 @@ export default function SignupPage() {
             </form>
           </CardContent>
 
-          <CardFooter className="justify-center border-t border-slate-800 pt-4">
-            <p className="text-sm text-slate-400">
+          <CardFooter className="justify-center border-t border-slate-200 pt-4 dark:border-slate-800">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Already have an account?{" "}
               <Link
                 href="/auth/login"
@@ -288,7 +288,7 @@ export default function SignupPage() {
         <div className="mt-6 text-center">
           <Link
             href="/"
-            className="text-xs text-slate-500 transition-colors hover:text-slate-300"
+            className="text-xs text-slate-500 dark:text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-300"
           >
             Back to SmartBuy
           </Link>

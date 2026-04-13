@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, HTTPException, status
 from pydantic import BaseModel, EmailStr
 
 from app.database import get_db
+from app.services.email_service import send_welcome_email
 
 router = APIRouter()
 
@@ -23,7 +24,7 @@ class AuthResponse(BaseModel):
 
 
 @router.post("/signup", response_model=AuthResponse)
-async def signup(request: SignUpRequest):
+async def signup(request: SignUpRequest, background_tasks: BackgroundTasks):
     db = get_db()
     try:
         response = db.auth.sign_up(
@@ -34,6 +35,10 @@ async def signup(request: SignUpRequest):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Signup failed",
             )
+
+        # Send welcome email in background — never blocks signup response
+        background_tasks.add_task(send_welcome_email, request.email)
+
         return AuthResponse(
             access_token=response.session.access_token if response.session else "",
             refresh_token=response.session.refresh_token if response.session else "",

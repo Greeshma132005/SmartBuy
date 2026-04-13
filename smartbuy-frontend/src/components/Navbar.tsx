@@ -2,9 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { ShoppingBag, User, LogOut, Home, LayoutDashboard, BookOpen, HelpCircle } from "lucide-react";
+import { ShoppingBag, Home, LayoutDashboard, BookOpen, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import ProfileDropdown from "@/components/ProfileDropdown";
 import type { AuthUser } from "@/types";
 
 interface NavbarProps {
@@ -57,25 +57,10 @@ export default function Navbar({ user, onSignOut }: NavbarProps) {
         {/* Auth Section */}
         <div className="flex items-center gap-2">
           {user ? (
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900">
-                  <User className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <span className="hidden text-sm font-medium text-slate-700 dark:text-slate-300 sm:inline-block">
-                  {user.email}
-                </span>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onSignOut}
-                className="gap-1.5 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400"
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </Button>
-            </div>
+            <ProfileDropdown
+              userEmail={user.email}
+              onSignOut={onSignOut ?? (() => {})}
+            />
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/auth/login">

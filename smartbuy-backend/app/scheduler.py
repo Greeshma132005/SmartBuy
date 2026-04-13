@@ -119,7 +119,7 @@ async def scheduled_price_update() -> None:
 
         # Check for price alerts
         try:
-            _check_price_alerts(db)
+            await _check_price_alerts(db)
         except Exception:
             logger.exception("Failed to check price alerts")
 
@@ -129,11 +129,16 @@ async def scheduled_price_update() -> None:
         logger.exception("Scheduled price update failed")
 
 
-def _check_price_alerts(db) -> None:
-    """Check active alerts and flag any whose target price has been met.
+async def _check_price_alerts(db) -> None:
+    """Check active alerts, mark triggered ones, and send email notifications.
 
     This is a best-effort helper — failures are logged but not re-raised.
     """
+    import asyncio
+    from datetime import datetime, timezone
+
+    from app.services.email_service import send_price_alert_email, get_user_email
+
     try:
         alerts_result = (
             db.table("price_alerts")
@@ -154,10 +159,10 @@ def _check_price_alerts(db) -> None:
                 if product_id is None or target_price is None:
                     continue
 
-                # Get the latest price record for this product
+                # Get the latest full price record for this product
                 price_result = (
                     db.table("price_records")
-                    .select("price")
+                    .select("price, platform, product_url")
                     .eq("product_id", product_id)
                     .order("scraped_at", desc=True)
                     .limit(1)
@@ -167,19 +172,64 @@ def _check_price_alerts(db) -> None:
                 if not price_result.data:
                     continue
 
-                current_price = price_result.data[0].get("price")
-                if current_price is not None and current_price <= target_price:
-                    # Mark the alert as triggered
-                    db.table("price_alerts").update(
-                        {"is_active": False, "triggered": True}
-                    ).eq("id", alert["id"]).execute()
+                latest = price_result.data[0]
+                current_price = latest.get("price")
+                platform = latest.get("platform", "unknown")
+                product_url = latest.get("product_url") or ""
 
-                    logger.info(
-                        "Price alert triggered for product %s: "
-                        "target=%.2f, current=%.2f",
-                        product_id,
-                        target_price,
-                        current_price,
+                if current_price is None or current_price > target_price:
+                    continue
+
+                # Mark the alert as triggered
+                db.table("price_alerts").update({
+                    "is_active": False,
+                    "triggered_at": datetime.now(timezone.utc).isoformat(),
+                }).eq("id", alert["id"]).execute()
+
+                logger.info(
+                    "Price alert triggered for product %s: target=%.2f, current=%.2f",
+                    product_id, target_price, current_price,
+                )
+
+                # ── Send email notification (fire-and-forget) ──
+                try:
+                    user_id = alert.get("user_id")
+                    if not user_id:
+                        continue
+
+                    user_email = await get_user_email(user_id)
+                    if not user_email:
+                        logger.warning("No email found for user %s — skipping alert email", user_id)
+                        continue
+
+                    # Fetch product details
+                    product_result = (
+                        db.table("products")
+                        .select("name, image_url")
+                        .eq("id", product_id)
+                        .limit(1)
+                        .execute()
+                    )
+                    if not product_result.data:
+                        continue
+                    product_data = product_result.data[0]
+
+                    asyncio.create_task(
+                        send_price_alert_email(
+                            to_email=user_email,
+                            product_name=product_data.get("name", "Unknown Product"),
+                            product_image_url=product_data.get("image_url"),
+                            target_price=float(target_price),
+                            current_price=float(current_price),
+                            platform=platform,
+                            product_url=product_url,
+                            product_id=str(product_id),
+                        )
+                    )
+
+                except Exception:
+                    logger.exception(
+                        "Failed to send alert email for alert %s", alert.get("id")
                     )
 
             except Exception:

@@ -136,7 +136,7 @@ export default function ShareButton({
       label: "X (Twitter)",
       icon: <span className="text-sm font-bold leading-none">𝕏</span>,
       onClick: handleTwitter,
-      color: "text-slate-300",
+      color: "text-slate-700 dark:text-slate-300",
     },
     {
       label: copied ? "Copied!" : "Copy Link",
@@ -146,7 +146,7 @@ export default function ShareButton({
         <Link className="h-4 w-4" />
       ),
       onClick: handleCopy,
-      color: copied ? "text-emerald-400" : "text-slate-300",
+      color: copied ? "text-emerald-400" : "text-slate-700 dark:text-slate-300",
     },
   ];
 
@@ -165,17 +165,17 @@ export default function ShareButton({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-lg border border-slate-800 bg-slate-900 shadow-xl transition-all duration-200"
+          className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl transition-all duration-200 dark:border-slate-800 dark:bg-slate-900"
         >
           {items.map((item) => (
             <button
               key={item.label}
               role="menuitem"
               onClick={item.onClick}
-              className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-slate-800"
+              className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               <span className={item.color}>{item.icon}</span>
-              <span className={item.color === "text-emerald-400" ? "font-medium text-emerald-400" : "text-slate-300"}>
+              <span className={item.color === "text-emerald-400" ? "font-medium text-emerald-400" : "text-slate-700 dark:text-slate-300"}>
                 {item.label}
               </span>
             </button>
@@ -183,13 +183,13 @@ export default function ShareButton({
 
           {canNativeShare && (
             <>
-              <div className="border-t border-slate-800" />
+              <div className="border-t border-slate-200 dark:border-slate-800" />
               <button
                 role="menuitem"
                 onClick={handleNativeShare}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-slate-300 transition-colors hover:bg-slate-800"
+                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
               >
-                <Share2 className="h-4 w-4 text-slate-400" />
+                <Share2 className="h-4 w-4 text-slate-600 dark:text-slate-400" />
                 More...
               </button>
             </>

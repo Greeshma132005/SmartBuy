@@ -142,19 +142,19 @@ export default function FAQPage() {
   let globalIndex = 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-slate-950">
       <Navbar user={user} onSignOut={signOut} />
 
       {/* Header */}
-      <section className="border-b border-slate-800">
+      <section className="border-b border-slate-200 dark:border-slate-800">
         <div className="mx-auto max-w-3xl px-4 pb-10 pt-16 text-center sm:px-6 lg:px-8">
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-indigo-500/10 p-3">
             <HelpCircle className="h-8 w-8 text-indigo-400" />
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl">
             Frequently Asked Questions
           </h1>
-          <p className="mt-3 text-lg text-slate-400">
+          <p className="mt-3 text-lg text-slate-600 dark:text-slate-400">
             Everything you need to know about SmartBuy
           </p>
         </div>
@@ -181,17 +181,17 @@ export default function FAQPage() {
                     return (
                       <div
                         key={currentIndex}
-                        className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900"
+                        className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900"
                       >
                         <button
                           onClick={() => handleToggle(currentIndex)}
-                          className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-slate-800/50"
+                          className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/50"
                         >
-                          <span className="pr-4 text-sm font-medium text-slate-200">
+                          <span className="pr-4 text-sm font-medium text-slate-800 dark:text-slate-200">
                             {item.question}
                           </span>
                           <ChevronDown
-                            className={`h-5 w-5 flex-shrink-0 text-slate-500 transition-transform duration-200 ${
+                            className={`h-5 w-5 flex-shrink-0 text-slate-500 dark:text-slate-500 transition-transform duration-200 ${
                               isOpen ? "rotate-180" : ""
                             }`}
                           />
@@ -203,8 +203,8 @@ export default function FAQPage() {
                               : "max-h-0 opacity-0"
                           } overflow-hidden`}
                         >
-                          <div className="border-t border-slate-800 px-5 pb-4 pt-3">
-                            <p className="text-sm leading-relaxed text-slate-400">
+                          <div className="border-t border-slate-200 px-5 pb-4 pt-3 dark:border-slate-800">
+                            <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                               {item.answer}
                             </p>
                           </div>
@@ -220,15 +220,15 @@ export default function FAQPage() {
           <Separator className="my-8" />
 
           {/* Still Have Questions Card */}
-          <Card className="border-slate-800 bg-slate-900">
+          <Card className="border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
             <CardContent className="flex flex-col items-center p-8 text-center">
               <div className="mb-4 inline-flex items-center justify-center rounded-full bg-indigo-500/10 p-3">
                 <Mail className="h-6 w-6 text-indigo-400" />
               </div>
-              <h3 className="text-xl font-bold text-slate-50">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50">
                 Still have questions?
               </h3>
-              <p className="mt-2 max-w-md text-sm text-slate-400">
+              <p className="mt-2 max-w-md text-sm text-slate-600 dark:text-slate-400">
                 We&apos;re here to help. Reach out to us and we&apos;ll get back
                 to you as soon as possible.
               </p>

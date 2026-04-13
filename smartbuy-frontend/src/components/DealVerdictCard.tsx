@@ -65,7 +65,7 @@ function ConfidenceBars({
         <div
           key={i}
           className={`w-5 h-1.5 rounded ${
-            i <= filled ? colorClass : "bg-slate-700"
+            i <= filled ? colorClass : "bg-slate-300 dark:bg-slate-700"
           }`}
         />
       ))}
@@ -92,22 +92,22 @@ export default function DealVerdictCard({
   if (verdict.verdict === "UNKNOWN" && verdict.data_points < 2) {
     return (
       <div
-        className={`rounded-lg border border-slate-800 ${VERDICT_STYLES.gray.bg} p-4`}
+        className={`rounded-lg border border-slate-200 dark:border-slate-800 ${VERDICT_STYLES.gray.bg} p-4`}
       >
         <div className="flex items-center gap-2">
-          <HelpCircle className="h-4 w-4 text-slate-400" />
-          <span className="text-sm font-medium text-slate-300">
+          <HelpCircle className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
             {verdict.title}
           </span>
         </div>
-        <p className="mt-1 text-sm text-slate-400">{verdict.description}</p>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{verdict.description}</p>
       </div>
     );
   }
 
   return (
     <div
-      className={`rounded-lg border border-slate-800 ${style.bg} ${style.border} p-4 space-y-3`}
+      className={`rounded-lg border border-slate-200 dark:border-slate-800 ${style.bg} ${style.border} p-4 space-y-3`}
     >
       {/* Top row: badge + confidence */}
       <div className="flex items-center justify-between">
@@ -118,7 +118,7 @@ export default function DealVerdictCard({
           {verdict.title}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-500 capitalize">
+          <span className="text-xs text-slate-500 dark:text-slate-500 capitalize">
             {verdict.confidence}
           </span>
           <ConfidenceBars level={verdict.confidence} colorClass={style.badge} />
@@ -126,7 +126,7 @@ export default function DealVerdictCard({
       </div>
 
       {/* Description */}
-      <p className="text-sm text-slate-300">{verdict.description}</p>
+      <p className="text-sm text-slate-700 dark:text-slate-300">{verdict.description}</p>
 
       {/* Price range bar */}
       <div className="space-y-1.5">
@@ -158,31 +158,31 @@ export default function DealVerdictCard({
             <div className="text-emerald-400 font-medium">
               {formatPrice(verdict.all_time_low)}
             </div>
-            <div className="text-slate-500">All-time low</div>
+            <div className="text-slate-500 dark:text-slate-500">All-time low</div>
           </div>
           <div className="text-center">
-            <div className="text-white font-medium">
+            <div className="text-slate-900 dark:text-white font-medium">
               {formatPrice(verdict.current_lowest)}
             </div>
-            <div className="text-slate-500">{verdict.current_platform}</div>
+            <div className="text-slate-500 dark:text-slate-500">{verdict.current_platform}</div>
           </div>
           <div className="text-right">
             <div className="text-red-400 font-medium">
               {formatPrice(verdict.all_time_high)}
             </div>
-            <div className="text-slate-500">All-time high</div>
+            <div className="text-slate-500 dark:text-slate-500">All-time high</div>
           </div>
         </div>
       </div>
 
       {/* Stats row */}
-      <div className="text-xs text-slate-500">
+      <div className="text-xs text-slate-500 dark:text-slate-500">
         30-day avg: {formatPrice(verdict.average_30d)} &middot;{" "}
         {verdict.data_points} price records
       </div>
 
       {/* Confidence reason */}
-      <p className="text-xs text-slate-600">{verdict.confidence_reason}</p>
+      <p className="text-xs text-slate-400 dark:text-slate-600">{verdict.confidence_reason}</p>
     </div>
   );
 }

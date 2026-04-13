@@ -49,7 +49,7 @@ export default function HomePage() {
       <Navbar user={user} onSignOut={signOut} />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-slate-800">
+      <section className="relative overflow-hidden border-b border-slate-200 dark:border-slate-800">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/40 via-slate-950 to-emerald-950/30" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-transparent" />
@@ -71,14 +71,14 @@ export default function HomePage() {
               <Zap className="h-3.5 w-3.5" />
               AI-Powered Price Intelligence
             </div>
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-50 sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl lg:text-6xl">
               Compare Prices.{" "}
               <span className="bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent">
                 Track Drops.
               </span>{" "}
               Save Money.
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400 sm:text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600 dark:text-slate-400 sm:text-lg">
               Search across Amazon, Flipkart, Croma and more. Get real-time
               price comparisons, AI predictions, coupon codes, and smart alerts
               -- all in one place.
@@ -90,7 +90,7 @@ export default function HomePage() {
 
           {/* Trending Searches */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-            <span className="flex items-center gap-1 text-xs text-slate-500">
+            <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-500">
               <TrendingUp className="h-3 w-3" />
               Trending:
             </span>
@@ -98,7 +98,7 @@ export default function HomePage() {
               <button
                 key={term}
                 onClick={() => handleTrendingClick(term)}
-                className="rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1 text-xs font-medium text-slate-300 transition-colors hover:border-indigo-500/50 hover:bg-indigo-500/10 hover:text-indigo-300"
+                className="rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 transition-colors hover:border-indigo-500/50 hover:bg-indigo-500/10 hover:text-indigo-300 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300"
               >
                 {term}
               </button>
@@ -108,13 +108,13 @@ export default function HomePage() {
       </section>
 
       {/* Results Section */}
-      <section className="flex-1 bg-slate-950">
+      <section className="flex-1 bg-white dark:bg-slate-950">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
           {/* Error State */}
           {error && (
             <div className="mx-auto max-w-md rounded-lg border border-red-500/30 bg-red-500/10 p-6 text-center">
               <p className="text-sm font-medium text-red-400">{error}</p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">
                 Please try again or use a different search term.
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function HomePage() {
             <div>
               <div className="mb-6 flex items-center gap-2">
                 <Search className="h-4 w-4 animate-pulse text-indigo-400" />
-                <span className="text-sm text-slate-400">
+                <span className="text-sm text-slate-600 dark:text-slate-400">
                   Searching across platforms...
                 </span>
               </div>
@@ -133,7 +133,7 @@ export default function HomePage() {
                 {Array.from({ length: 8 }).map((_, i) => (
                   <div
                     key={i}
-                    className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900"
+                    className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900"
                   >
                     <Skeleton className="aspect-square w-full" />
                     <div className="space-y-3 p-4">
@@ -158,10 +158,10 @@ export default function HomePage() {
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ShoppingBag className="h-4 w-4 text-indigo-400" />
-                  <h2 className="text-sm font-medium text-slate-300">
+                  <h2 className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     {results.results.length} result
                     {results.results.length !== 1 ? "s" : ""} for{" "}
-                    <span className="text-slate-50">
+                    <span className="text-slate-900 dark:text-slate-50">
                       &ldquo;{results.query}&rdquo;
                     </span>
                   </h2>
@@ -182,13 +182,13 @@ export default function HomePage() {
             results &&
             results.results.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-800">
-                  <Search className="h-7 w-7 text-slate-500" />
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                  <Search className="h-7 w-7 text-slate-500 dark:text-slate-500" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-300">
+                <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">
                   No products found
                 </h3>
-                <p className="mt-1 max-w-sm text-sm text-slate-500">
+                <p className="mt-1 max-w-sm text-sm text-slate-500 dark:text-slate-500">
                   We couldn&apos;t find any results for &ldquo;{results.query}
                   &rdquo;. Try a different search term or check the trending
                   searches above.
@@ -199,49 +199,49 @@ export default function HomePage() {
           {/* Initial State (no search yet) */}
           {!loading && !error && !hasSearched && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-800">
-                <Search className="h-7 w-7 text-slate-500" />
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                <Search className="h-7 w-7 text-slate-500 dark:text-slate-500" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-300">
+              <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">
                 Search to compare prices
               </h3>
-              <p className="mt-1 max-w-sm text-sm text-slate-500">
+              <p className="mt-1 max-w-sm text-sm text-slate-500 dark:text-slate-500">
                 Enter a product name above to compare prices across Amazon,
                 Flipkart, Croma and more.
               </p>
 
               {/* Feature highlights */}
               <div className="mt-12 grid max-w-3xl gap-6 sm:grid-cols-3">
-                <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-6 text-center">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-6 text-center dark:border-slate-800 dark:bg-slate-900/50">
                   <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/10">
                     <Search className="h-5 w-5 text-indigo-400" />
                   </div>
-                  <h4 className="text-sm font-semibold text-slate-200">
+                  <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                     Compare Prices
                   </h4>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">
                     See prices from multiple platforms side by side
                   </p>
                 </div>
-                <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-6 text-center">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-6 text-center dark:border-slate-800 dark:bg-slate-900/50">
                   <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10">
                     <TrendingUp className="h-5 w-5 text-emerald-400" />
                   </div>
-                  <h4 className="text-sm font-semibold text-slate-200">
+                  <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                     Track Price History
                   </h4>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">
                     View historical price trends and AI predictions
                   </p>
                 </div>
-                <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-6 text-center">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-6 text-center dark:border-slate-800 dark:bg-slate-900/50">
                   <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-amber-500/10">
                     <Zap className="h-5 w-5 text-amber-400" />
                   </div>
-                  <h4 className="text-sm font-semibold text-slate-200">
+                  <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                     Smart Alerts
                   </h4>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">
                     Get notified when prices drop to your target
                   </p>
                 </div>

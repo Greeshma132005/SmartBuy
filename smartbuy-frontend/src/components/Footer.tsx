@@ -36,7 +36,7 @@ const FOOTER_LINKS = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-800 bg-slate-950">
+    <footer className="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Top section */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
@@ -44,9 +44,9 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-2">
               <ShoppingBag className="h-6 w-6 text-indigo-400" />
-              <span className="text-xl font-bold text-slate-50">SmartBuy</span>
+              <span className="text-xl font-bold text-slate-900 dark:text-slate-50">SmartBuy</span>
             </Link>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">
+            <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
               Your all-in-one price comparison platform. Compare prices across
               Amazon, Flipkart, Croma, and more. Track price history, get AI
               predictions, and never overpay again.
@@ -56,7 +56,7 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(FOOTER_LINKS).map(([title, links]) => (
             <div key={title}>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 {title}
               </h3>
               <ul className="mt-3 space-y-2">
@@ -64,7 +64,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-500 transition-colors hover:text-slate-300"
+                      className="text-sm text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300"
                     >
                       {link.label}
                     </Link>
@@ -76,8 +76,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 border-t border-slate-800 pt-8 text-center">
-          <p className="text-sm text-slate-500">
+        <div className="mt-12 border-t border-slate-200 pt-8 text-center dark:border-slate-800">
+          <p className="text-sm text-slate-500 dark:text-slate-500">
             Copyright &copy; {new Date().getFullYear()} SmartBuy &mdash; All rights reserved
           </p>
         </div>

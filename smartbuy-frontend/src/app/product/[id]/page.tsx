@@ -145,10 +145,10 @@ export default function ProductDetailPage() {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10">
             <AlertCircle className="h-7 w-7 text-red-400" />
           </div>
-          <h2 className="text-lg font-semibold text-slate-200">
+          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
             Failed to load product
           </h2>
-          <p className="mt-1 max-w-sm text-sm text-slate-500">
+          <p className="mt-1 max-w-sm text-sm text-slate-500 dark:text-slate-500">
             {error || "The product could not be found. It may have been removed or the link is invalid."}
           </p>
           <Button
@@ -169,12 +169,12 @@ export default function ProductDetailPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar user={user} onSignOut={signOut} />
 
-      <main className="flex-1 bg-slate-950">
+      <main className="flex-1 bg-white dark:bg-slate-950">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           {/* Back Button */}
           <button
             onClick={() => router.push("/")}
-            className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 transition-colors hover:text-slate-200"
+            className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Search
@@ -183,7 +183,7 @@ export default function ProductDetailPage() {
           {/* Product Header */}
           <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
             {/* Image */}
-            <div className="relative aspect-square overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
+            <div className="relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
               {product.image_url ? (
                 <Image
                   src={product.image_url}
@@ -194,7 +194,7 @@ export default function ProductDetailPage() {
                   priority
                 />
               ) : (
-                <div className="flex h-full items-center justify-center text-slate-600">
+                <div className="flex h-full items-center justify-center text-slate-400 dark:text-slate-600">
                   <svg
                     className="h-20 w-20"
                     fill="none"
@@ -220,12 +220,12 @@ export default function ProductDetailPage() {
                 </Badge>
               )}
 
-              <h1 className="text-2xl font-bold leading-tight text-slate-50 sm:text-3xl">
+              <h1 className="text-2xl font-bold leading-tight text-slate-900 dark:text-slate-50 sm:text-3xl">
                 {product.name}
               </h1>
 
               {product.description && (
-                <p className="text-sm leading-relaxed text-slate-400">
+                <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                   {product.description}
                 </p>
               )}
@@ -239,7 +239,7 @@ export default function ProductDetailPage() {
                   <p className="mt-1 text-2xl font-bold text-emerald-400">
                     {formatPrice(lowestPrice)}
                   </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-500">
                     Compared across {prices.length} platform
                     {prices.length !== 1 ? "s" : ""}
                   </p>
@@ -293,7 +293,7 @@ export default function ProductDetailPage() {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <Tag className="h-5 w-5 text-indigo-400" />
-              <h2 className="text-lg font-semibold text-slate-100">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 Price Comparison
               </h2>
             </div>
@@ -306,11 +306,11 @@ export default function ProductDetailPage() {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5 text-indigo-400" />
-              <h2 className="text-lg font-semibold text-slate-100">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 Price History
               </h2>
             </div>
-            <Card className="border-slate-800 bg-slate-900/50">
+            <Card className="border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50">
               <CardContent className="p-4 sm:p-6">
                 <PriceHistoryChart
                   history={priceHistory}
@@ -327,7 +327,7 @@ export default function ProductDetailPage() {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <Brain className="h-5 w-5 text-indigo-400" />
-              <h2 className="text-lg font-semibold text-slate-100">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 AI Price Prediction
               </h2>
             </div>
@@ -341,7 +341,7 @@ export default function ProductDetailPage() {
               <section className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Ticket className="h-5 w-5 text-indigo-400" />
-                  <h2 className="text-lg font-semibold text-slate-100">
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     Available Coupons
                   </h2>
                   <Badge variant="secondary" className="ml-1">

@@ -15,6 +15,14 @@ class Settings(BaseSettings):
     scraping_interval_hours: int = 6
     rapidapi_key: str = ""  # RapidAPI key for Real-Time Product Search
 
+    # SMTP (email notifications)
+    smtp_host: str = "smtp.gmail.com"
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = ""
+    smtp_from_name: str = "SmartBuy"
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 

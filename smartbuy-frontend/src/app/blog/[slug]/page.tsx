@@ -27,11 +27,11 @@ export default function BlogArticlePage() {
 
   if (!post) {
     return (
-      <div className="flex min-h-screen flex-col bg-slate-950">
+      <div className="flex min-h-screen flex-col bg-white dark:bg-slate-950">
         <Navbar user={user} onSignOut={signOut} />
         <div className="flex flex-1 flex-col items-center justify-center px-4 text-center">
-          <h1 className="text-4xl font-extrabold text-slate-50">404</h1>
-          <p className="mt-3 text-lg text-slate-400">
+          <h1 className="text-4xl font-extrabold text-slate-900 dark:text-slate-50">404</h1>
+          <p className="mt-3 text-lg text-slate-600 dark:text-slate-400">
             Blog post not found.
           </p>
           <Link href="/blog" className="mt-6">
@@ -60,7 +60,7 @@ export default function BlogArticlePage() {
         {/* Back Link */}
         <Link
           href="/blog"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 transition-colors hover:text-indigo-400"
+          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-400 transition-colors hover:text-indigo-400"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Blog
@@ -69,18 +69,18 @@ export default function BlogArticlePage() {
         {/* Category Badge */}
         <Badge
           variant="outline"
-          className={`mb-4 border ${categoryColors[post.category] ?? "text-slate-400 border-slate-700"}`}
+          className={`mb-4 border ${categoryColors[post.category] ?? "text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700"}`}
         >
           {post.category}
         </Badge>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-50 sm:text-4xl">
+        <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900 dark:text-slate-50 sm:text-4xl">
           {post.title}
         </h1>
 
         {/* Meta */}
-        <div className="mt-4 flex items-center gap-4 text-sm text-slate-500">
+        <div className="mt-4 flex items-center gap-4 text-sm text-slate-500 dark:text-slate-500">
           <span className="flex items-center gap-1.5">
             <Calendar className="h-4 w-4" />
             {new Date(post.date).toLocaleDateString("en-IN", {
@@ -102,7 +102,7 @@ export default function BlogArticlePage() {
           {contentParagraphs.map((paragraph, index) => (
             <p
               key={index}
-              className="text-base leading-relaxed text-slate-300"
+              className="text-base leading-relaxed text-slate-700 dark:text-slate-300"
             >
               {paragraph}
             </p>
@@ -114,7 +114,7 @@ export default function BlogArticlePage() {
         {/* Related Articles */}
         {relatedPosts.length > 0 && (
           <section>
-            <h2 className="mb-6 text-2xl font-bold text-slate-50">
+            <h2 className="mb-6 text-2xl font-bold text-slate-900 dark:text-slate-50">
               Related Articles
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -129,10 +129,10 @@ export default function BlogArticlePage() {
 
         {/* CTA Banner */}
         <div className="rounded-xl border border-indigo-500/20 bg-gradient-to-r from-indigo-500/10 to-emerald-500/10 p-8 text-center">
-          <h3 className="text-xl font-bold text-slate-50">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50">
             Ready to start saving?
           </h3>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             Search for any product and compare prices across platforms instantly.
           </p>
           <Link href="/" className="mt-5 inline-block">

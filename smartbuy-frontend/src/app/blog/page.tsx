@@ -19,16 +19,16 @@ export default function BlogPage() {
       : blogPosts.filter((post) => post.category === activeCategory);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-slate-950">
       <Navbar user={user} onSignOut={signOut} />
 
       {/* Header */}
-      <section className="border-b border-slate-800">
+      <section className="border-b border-slate-200 dark:border-slate-800">
         <div className="mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl">
             SmartBuy Blog
           </h1>
-          <p className="mt-3 max-w-2xl text-lg text-slate-400">
+          <p className="mt-3 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
             Tips, guides, and insights to help you shop smarter
           </p>
 
@@ -45,7 +45,7 @@ export default function BlogPage() {
                   className={`cursor-pointer px-4 py-1.5 text-sm transition-colors ${
                     activeCategory === category
                       ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                      : "border-slate-700 text-slate-400 hover:border-slate-500 hover:text-slate-300"
+                      : "border-slate-300 text-slate-600 hover:border-slate-500 hover:text-slate-700 dark:border-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                   }`}
                 >
                   {category}
@@ -67,10 +67,10 @@ export default function BlogPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <h3 className="text-lg font-semibold text-slate-300">
+              <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300">
                 No posts found
               </h3>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-500">
                 No blog posts match the selected category.
               </p>
             </div>
