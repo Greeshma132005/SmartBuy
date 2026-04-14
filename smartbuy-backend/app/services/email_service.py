@@ -266,6 +266,82 @@ async def send_price_alert_email(
     return await _send_email(to_email, subject, _base_template(content))
 
 
+# ── Alert Confirmation Email ──────────────────────────────────────────────────
+
+
+async def send_alert_confirmation_email(
+    to_email: str,
+    product_name: str,
+    product_image_url: Optional[str],
+    target_price: float,
+    current_price: Optional[float],
+    product_id: str,
+) -> bool:
+    """Send a confirmation email when a user creates a price alert."""
+    fe = _frontend_url()
+    db = _dashboard_url()
+
+    subject = f"✅ Price Alert Set: {product_name}"
+
+    image_section = ""
+    if product_image_url:
+        image_section = (
+            f'<div style="text-align:center; margin:0 0 20px;">'
+            f'<img src="{product_image_url}" alt="{product_name}" '
+            f'style="max-width:180px; max-height:180px; border-radius:8px; border:1px solid #334155;"/>'
+            f"</div>"
+        )
+
+    current_price_row = ""
+    if current_price is not None:
+        current_price_row = f"""
+        <tr>
+          <td style="padding:12px 20px; border-bottom:1px solid #334155;">
+            <span style="font-size:13px; color:#94a3b8;">Current price</span>
+          </td>
+          <td style="padding:12px 20px; text-align:right; border-bottom:1px solid #334155;">
+            <span style="font-size:16px; font-weight:600; color:#ffffff;">₹{current_price:,.0f}</span>
+          </td>
+        </tr>
+        """
+
+    content = f"""
+    <h2 style="margin:0 0 8px; font-size:22px; color:#ffffff; text-align:center;">✅ You're all set!</h2>
+    <p style="font-size:15px; color:#94a3b8; text-align:center; margin:0 0 24px;">
+      We'll email you as soon as the price drops to or below your target.
+    </p>
+    {image_section}
+    <h3 style="margin:0 0 16px; font-size:18px; color:#ffffff; text-align:center; line-height:1.4;">{product_name}</h3>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%"
+           style="background-color:#0f172a; border-radius:8px; border:1px solid #334155; margin:0 0 20px;">
+      {current_price_row}
+      <tr>
+        <td style="padding:12px 20px;">
+          <span style="font-size:13px; color:#94a3b8;">Your target price</span>
+        </td>
+        <td style="padding:12px 20px; text-align:right;">
+          <span style="font-size:18px; font-weight:700; color:#10b981;">₹{target_price:,.0f}</span>
+        </td>
+      </tr>
+    </table>
+    <p style="font-size:14px; color:#cbd5e1; line-height:1.6; margin:0 0 24px;">
+      Our system checks prices every few hours across Amazon, Flipkart, Croma, and more.
+      When the price hits your target, you'll get an instant email with a direct link to buy.
+    </p>
+    <div style="margin:24px 0 12px; text-align:center;">
+      {_button("View Product on SmartBuy", f"{fe}/product/{product_id}", "#6c63ff")}
+    </div>
+    <div style="margin:12px 0; text-align:center;">
+      {_button("Go to Dashboard", db, "#475569")}
+    </div>
+    <p style="font-size:12px; color:#64748b; line-height:1.6; margin:24px 0 0; text-align:center;">
+      You can cancel this alert anytime from your dashboard.
+    </p>
+    """
+
+    return await _send_email(to_email, subject, _base_template(content))
+
+
 # ── Helper: Get user email by user_id ─────────────────────────────────────────
 
 

@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.auth.dependencies import get_current_user
 from app.database import get_db
+from app.services.email_service import send_alert_confirmation_email
 from app.services.product_service import get_product
 from app.services.price_service import get_latest_prices
 from app.models.schemas import (
@@ -65,6 +66,28 @@ async def create_alert(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to create alert",
             )
+
+        # Send confirmation email to let the user know the alert was saved
+        if alert_email:
+            try:
+                current_lowest: float | None = None
+                latest_prices = get_latest_prices(body.product_id)
+                if latest_prices:
+                    current_lowest = min(p["price"] for p in latest_prices)
+
+                await send_alert_confirmation_email(
+                    to_email=alert_email,
+                    product_name=product_dict.get("name", "your tracked product"),
+                    product_image_url=product_dict.get("image_url"),
+                    target_price=float(body.target_price),
+                    current_price=float(current_lowest) if current_lowest is not None else None,
+                    product_id=str(body.product_id),
+                )
+            except Exception:
+                logger.exception(
+                    "Failed to send alert confirmation email to %s", alert_email
+                )
+
         return Alert(**result.data[0])
     except HTTPException:
         raise
