@@ -134,7 +134,6 @@ async def _check_price_alerts(db) -> None:
 
     This is a best-effort helper — failures are logged but not re-raised.
     """
-    import asyncio
     from datetime import datetime, timezone
 
     from app.services.email_service import send_price_alert_email, get_user_email
@@ -191,7 +190,7 @@ async def _check_price_alerts(db) -> None:
                     product_id, target_price, current_price,
                 )
 
-                # ── Send email notification (fire-and-forget) ──
+                # ── Send email notification (awaited synchronously) ──
                 try:
                     user_id = alert.get("user_id")
                     if not user_id:
@@ -214,17 +213,15 @@ async def _check_price_alerts(db) -> None:
                         continue
                     product_data = product_result.data[0]
 
-                    asyncio.create_task(
-                        send_price_alert_email(
-                            to_email=user_email,
-                            product_name=product_data.get("name", "Unknown Product"),
-                            product_image_url=product_data.get("image_url"),
-                            target_price=float(target_price),
-                            current_price=float(current_price),
-                            platform=platform,
-                            product_url=product_url,
-                            product_id=str(product_id),
-                        )
+                    await send_price_alert_email(
+                        to_email=user_email,
+                        product_name=product_data.get("name", "Unknown Product"),
+                        product_image_url=product_data.get("image_url"),
+                        target_price=float(target_price),
+                        current_price=float(current_price),
+                        platform=platform,
+                        product_url=product_url,
+                        product_id=str(product_id),
                     )
 
                 except Exception:
