@@ -47,15 +47,19 @@ async def create_alert(
 
     try:
         db = get_db()
-        result = (
-            db.table("price_alerts")
-            .insert({
-                "user_id": user["id"],
-                "product_id": body.product_id,
-                "target_price": body.target_price,
-            })
-            .execute()
-        )
+        # Prefer the email passed in the body (from frontend),
+        # fall back to email on the JWT user if available.
+        alert_email = body.email or user.get("email")
+
+        payload: dict = {
+            "user_id": user["id"],
+            "product_id": body.product_id,
+            "target_price": body.target_price,
+        }
+        if alert_email:
+            payload["email"] = alert_email
+
+        result = db.table("price_alerts").insert(payload).execute()
         if not result.data:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

@@ -91,12 +91,14 @@ class Coupon(CouponBase):
 class AlertCreate(BaseModel):
     product_id: str
     target_price: float
+    email: str | None = None
 
 
 class Alert(BaseModel):
     id: str
     user_id: str
     product_id: str
+    email: str | None = None
     target_price: float
     is_active: bool = True
     triggered_at: datetime | None = None

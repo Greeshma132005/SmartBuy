@@ -192,13 +192,19 @@ async def _check_price_alerts(db) -> None:
 
                 # ── Send email notification (awaited synchronously) ──
                 try:
-                    user_id = alert.get("user_id")
-                    if not user_id:
-                        continue
-
-                    user_email = await get_user_email(user_id)
+                    # Prefer email stored on the alert row (passed from frontend).
+                    # Fall back to Supabase admin lookup only if missing.
+                    user_email = alert.get("email")
                     if not user_email:
-                        logger.warning("No email found for user %s — skipping alert email", user_id)
+                        user_id = alert.get("user_id")
+                        if user_id:
+                            user_email = await get_user_email(user_id)
+
+                    if not user_email:
+                        logger.warning(
+                            "No email for alert %s — skipping alert email",
+                            alert.get("id"),
+                        )
                         continue
 
                     # Fetch product details

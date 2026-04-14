@@ -88,3 +88,16 @@ async def login(request: LoginRequest):
 @router.post("/logout")
 async def logout():
     return {"message": "Logged out successfully"}
+
+
+class WelcomeEmailRequest(BaseModel):
+    email: EmailStr
+
+
+@router.post("/welcome-email")
+async def welcome_email(request: WelcomeEmailRequest):
+    """Send a welcome email. Called by the frontend after a successful
+    Supabase client-side signup (since we don't go through /signup in that flow).
+    """
+    sent = await send_welcome_email(request.email)
+    return {"sent": sent}

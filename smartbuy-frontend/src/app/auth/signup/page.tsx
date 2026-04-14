@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/hooks/useAuth";
+import { sendWelcomeEmail } from "@/lib/api";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -64,6 +65,10 @@ export default function SignupPage() {
     setLoading(true);
     try {
       await signUp(email, password);
+      // Trigger welcome email via backend (Supabase signup happens client-side)
+      sendWelcomeEmail(email).catch(() => {
+        /* Non-blocking: signup still succeeds even if email fails */
+      });
       setSuccess(
         "Account created successfully! Please check your email to confirm your account."
       );

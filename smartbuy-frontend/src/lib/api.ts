@@ -73,12 +73,24 @@ export async function getProductCoupons(productId: string) {
   return data.coupons ?? data;
 }
 
+// ── Auth ─────────────────────────────────────────────────────────────────────
+
+export async function sendWelcomeEmail(email: string) {
+  const { data } = await api.post("/api/auth/welcome-email", { email });
+  return data;
+}
+
 // ── Alerts ───────────────────────────────────────────────────────────────────
 
-export async function createAlert(productId: string, targetPrice: number) {
+export async function createAlert(
+  productId: string,
+  targetPrice: number,
+  email?: string,
+) {
   const { data } = await api.post("/api/alerts", {
     product_id: productId,
     target_price: targetPrice,
+    email,
   });
   return data;
 }

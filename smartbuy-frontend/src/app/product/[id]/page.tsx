@@ -75,7 +75,7 @@ export default function ProductDetailPage() {
 
   const handleAlertSubmit = async (targetPrice: number) => {
     try {
-      await createAlert(productId, targetPrice);
+      await createAlert(productId, targetPrice, user?.email);
       setAlertOpen(false);
       setAlertSuccess(true);
       setTimeout(() => setAlertSuccess(false), 4000);
