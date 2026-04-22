@@ -51,6 +51,10 @@ async def create_alert(
         # Prefer the email passed in the body (from frontend),
         # fall back to email on the JWT user if available.
         alert_email = body.email or user.get("email")
+        print(f"[ALERT] Creating alert for user={user['id']}, product={body.product_id}, target=₹{body.target_price}")
+        print(f"[ALERT] Email from body: {body.email}")
+        print(f"[ALERT] Email from JWT: {user.get('email')}")
+        print(f"[ALERT] Resolved email: {alert_email}")
 
         payload: dict = {
             "user_id": user["id"],
@@ -66,16 +70,20 @@ async def create_alert(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to create alert",
             )
+        print(f"[ALERT] ✅ Alert created successfully: {result.data[0].get('id')}")
 
         # Send confirmation email to let the user know the alert was saved
         if alert_email:
+            print(f"[ALERT] Sending confirmation email to {alert_email}...")
             try:
                 current_lowest: float | None = None
                 latest_prices = get_latest_prices(body.product_id)
                 if latest_prices:
                     current_lowest = min(p["price"] for p in latest_prices)
+                print(f"[ALERT] Current lowest price: {current_lowest}")
+                print(f"[ALERT] Product name: {product_dict.get('name')}")
 
-                await send_alert_confirmation_email(
+                email_sent = await send_alert_confirmation_email(
                     to_email=alert_email,
                     product_name=product_dict.get("name", "your tracked product"),
                     product_image_url=product_dict.get("image_url"),
@@ -83,10 +91,14 @@ async def create_alert(
                     current_price=float(current_lowest) if current_lowest is not None else None,
                     product_id=str(body.product_id),
                 )
-            except Exception:
+                print(f"[ALERT] {'✅ Email sent successfully' if email_sent else '❌ Email send returned False'}")
+            except Exception as exc:
+                print(f"[ALERT] ❌ Email send failed with exception: {exc}")
                 logger.exception(
                     "Failed to send alert confirmation email to %s", alert_email
                 )
+        else:
+            print("[ALERT] ⚠️ No email available — skipping confirmation email")
 
         return Alert(**result.data[0])
     except HTTPException:
