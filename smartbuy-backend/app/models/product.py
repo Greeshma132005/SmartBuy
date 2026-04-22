@@ -15,6 +15,7 @@ class Product(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     google_product_id: Mapped[str | None] = mapped_column(String(500), nullable=True, index=True)
+    ai_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
     price_records = relationship("PriceRecord", back_populates="product", cascade="all, delete-orphan")

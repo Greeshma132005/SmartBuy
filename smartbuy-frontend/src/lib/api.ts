@@ -80,6 +80,30 @@ export async function sendWelcomeEmail(email: string) {
   return data;
 }
 
+// ── AI Chat ──────────────────────────────────────────────────────────────────
+
+export async function sendChatMessage(
+  messages: { role: string; content: string }[],
+  contextQuery?: string,
+) {
+  const { data } = await api.post("/api/chat/", {
+    messages,
+    product_context_query: contextQuery || null,
+  });
+  return data;
+}
+
+// ── AI Summary ───────────────────────────────────────────────────────────────
+
+export async function getAISummary(productId: string) {
+  try {
+    const { data } = await api.get(`/api/products/${productId}/ai-summary`);
+    return data;
+  } catch {
+    return { summary: null, cached: false };
+  }
+}
+
 // ── Alerts ───────────────────────────────────────────────────────────────────
 
 export async function createAlert(
@@ -128,6 +152,36 @@ export async function getSearchHistory() {
     ...s,
     searched_at: s.searched_at ?? s.created_at,
   }));
+}
+
+// ── Chat Sessions ────────────────────────────────────────────────────────────
+
+export async function createChatSession(source: "widget" | "askai") {
+  const { data } = await api.post("/api/chat/sessions", { source });
+  return data;
+}
+
+export async function getChatSessions(source?: "widget" | "askai") {
+  const { data } = await api.get("/api/chat/sessions", { params: source ? { source } : {} });
+  return data;
+}
+
+export async function getChatMessages(sessionId: string) {
+  const { data } = await api.get(`/api/chat/sessions/${sessionId}/messages`);
+  return data;
+}
+
+export async function deleteChatSession(sessionId: string) {
+  const { data } = await api.delete(`/api/chat/sessions/${sessionId}`);
+  return data;
+}
+
+export async function sendSessionMessage(sessionId: string, content: string, contextQuery?: string) {
+  const { data } = await api.post(`/api/chat/sessions/${sessionId}/message`, {
+    content,
+    product_context_query: contextQuery || null,
+  });
+  return data;
 }
 
 export default api;

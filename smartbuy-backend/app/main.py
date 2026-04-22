@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.routes import products, prices, coupons, alerts
+from app.routes.chat import router as chat_router
 from app.auth.routes import router as auth_router
 from app.scheduler import start_scheduler, shutdown_scheduler
 
@@ -40,6 +41,7 @@ app.include_router(products.router, prefix="/api/products", tags=["Products"])
 app.include_router(prices.router, prefix="/api/products", tags=["Prices"])
 app.include_router(coupons.router, prefix="/api/coupons", tags=["Coupons"])
 app.include_router(alerts.router, prefix="/api/alerts", tags=["Alerts"])
+app.include_router(chat_router, prefix="/api/chat", tags=["AI Chat"])
 
 
 @app.get("/")

@@ -13,7 +13,7 @@ from app.services.product_service import (
     store_price_record,
     log_search,
 )
-from app.services.price_service import get_latest_prices
+from app.services.price_service import get_latest_prices, get_price_history, get_price_stats
 from app.services.coupon_service import get_coupons_for_product
 from app.models.schemas import (
     Product,
@@ -165,3 +165,61 @@ async def get_product_coupons(product_id: str):
 
     coupons = get_coupons_for_product(product_id)
     return {"product_id": product_id, "coupons": coupons}
+
+
+@router.get("/{product_id}/ai-summary")
+async def get_product_ai_summary(product_id: str):
+    """Generate (or return cached) AI-powered product price analysis summary."""
+    product_dict = get_product(product_id)
+    if not product_dict:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Product not found: {product_id}",
+        )
+
+    # Return cached summary if available
+    cached = product_dict.get("ai_summary")
+    if cached:
+        return {"summary": cached, "cached": True}
+
+    # Gather price data
+    latest_prices = get_latest_prices(product_id)
+    if not latest_prices:
+        return {"summary": "Not enough price data to generate a summary yet.", "cached": False}
+
+    stats = get_price_stats(product_id)
+    history = get_price_history(product_id, days=90)
+
+    # Calculate verdict
+    from app.services.verdict_service import calculate_verdict
+
+    verdict_result = calculate_verdict(latest_prices, history)
+
+    # Generate AI summary
+    from app.services.ai_service import generate_product_summary
+
+    summary = await generate_product_summary(
+        product_name=product_dict.get("name", "Unknown Product"),
+        current_lowest_price=verdict_result.current_lowest,
+        current_cheapest_platform=verdict_result.current_platform,
+        all_time_low=verdict_result.all_time_low,
+        all_time_high=verdict_result.all_time_high,
+        average_30d=verdict_result.average_30d,
+        num_platforms=len(latest_prices),
+        verdict=verdict_result.verdict,
+        percent_vs_average=verdict_result.percent_vs_average,
+    )
+
+    if summary is None:
+        return {"summary": "AI summary is temporarily unavailable. Please try again later.", "cached": False}
+
+    # Cache the summary on the product record
+    try:
+        from app.database import get_db
+
+        db = get_db()
+        db.table("products").update({"ai_summary": summary}).eq("id", product_id).execute()
+    except Exception:
+        logger.exception("Failed to cache AI summary for product %s", product_id)
+
+    return {"summary": summary, "cached": False}

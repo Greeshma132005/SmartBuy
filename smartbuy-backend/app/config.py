@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     scraping_interval_hours: int = 6
     rapidapi_key: str = ""  # RapidAPI key for Real-Time Product Search
 
+    # Google Gemini AI
+    gemini_api_key: str = ""
+
     # SMTP (email notifications)
     smtp_host: str = "smtp.gmail.com"
     smtp_port: int = 587

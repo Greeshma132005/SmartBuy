@@ -5,6 +5,8 @@ from app.models.price_prediction import PricePrediction
 from app.models.coupon import Coupon
 from app.models.price_alert import PriceAlert
 from app.models.search_history import SearchHistory
+from app.models.chat_session import ChatSession
+from app.models.chat_message import ChatMessageModel
 
 __all__ = [
     "Base",
@@ -14,4 +16,6 @@ __all__ = [
     "Coupon",
     "PriceAlert",
     "SearchHistory",
+    "ChatSession",
+    "ChatMessageModel",
 ]

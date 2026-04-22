@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import AIChatWidget from "@/components/AIChatWidget";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,7 +39,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-full flex flex-col bg-white text-slate-900 dark:bg-[#0a0a0a] dark:text-white antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>{children}<AIChatWidget /></ThemeProvider>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ShoppingBag, Home, LayoutDashboard, BookOpen, HelpCircle } from "lucide-react";
+import { ShoppingBag, Home, LayoutDashboard, BookOpen, HelpCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import type { AuthUser } from "@/types";
@@ -37,6 +37,14 @@ export default function Navbar({ user, onSignOut }: NavbarProps) {
               <Button variant="ghost" size="sm" className="gap-1.5">
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
+              </Button>
+            </Link>
+          )}
+          {user && (
+            <Link href="/ask-ai">
+              <Button variant="ghost" size="sm" className="gap-1.5">
+                <Sparkles className="h-4 w-4" />
+                Ask AI
               </Button>
             </Link>
           )}
@@ -89,6 +97,14 @@ export default function Navbar({ user, onSignOut }: NavbarProps) {
             <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
               <LayoutDashboard className="h-3.5 w-3.5" />
               Dashboard
+            </Button>
+          </Link>
+        )}
+        {user && (
+          <Link href="/ask-ai">
+            <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
+              <Sparkles className="h-3.5 w-3.5" />
+              Ask AI
             </Button>
           </Link>
         )}

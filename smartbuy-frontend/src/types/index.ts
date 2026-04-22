@@ -125,3 +125,47 @@ export interface DealVerdict {
   data_points: number;
   color: 'green' | 'teal' | 'amber' | 'red' | 'gray';
 }
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface ChatProductResult {
+  product_id: string;
+  name: string;
+  image_url: string | null;
+  lowest_price: number | null;
+  lowest_platform: string | null;
+  num_platforms: number;
+}
+
+export interface ChatResponse {
+  reply: string;
+  context_used: boolean;
+  products: ChatProductResult[];
+}
+
+export interface AISummaryResponse {
+  summary: string | null;
+  cached: boolean;
+  reason?: string;
+}
+
+export interface ChatSession {
+  id: string;
+  user_id: string;
+  source: "widget" | "askai";
+  title: string;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface ChatMessageDB {
+  id: string;
+  session_id: string;
+  role: "user" | "assistant";
+  content: string;
+  products: ChatProductResult[] | null;
+  created_at: string | null;
+}

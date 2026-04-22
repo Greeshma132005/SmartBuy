@@ -17,6 +17,7 @@ import {
 import Navbar from "@/components/Navbar";
 import ShareButton from "@/components/ShareButton";
 import DealVerdictCard from "@/components/DealVerdictCard";
+import AIProductSummary from "@/components/AIProductSummary";
 import PriceComparisonTable from "@/components/PriceComparisonTable";
 import PriceHistoryChart from "@/components/PriceHistoryChart";
 import PricePredictionBadge from "@/components/PricePredictionBadge";
@@ -286,6 +287,9 @@ export default function ProductDetailPage() {
 
           {/* Deal Verdict */}
           <DealVerdictCard verdict={verdict} loading={verdictLoading} />
+
+          {/* AI Product Summary */}
+          <AIProductSummary productId={productId} />
 
           <Separator className="my-10" />
 
