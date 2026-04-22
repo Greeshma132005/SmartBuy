@@ -57,9 +57,14 @@ function LoginPageInner() {
       await signIn(email, password);
       router.push(redirectUrl || "/dashboard");
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Sign in failed. Please try again."
-      );
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.includes("Invalid login credentials")) {
+        setError(
+          "No account found with this email/password. Please sign up first or check your credentials."
+        );
+      } else {
+        setError(msg || "Sign in failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -213,6 +218,15 @@ function LoginPageInner() {
                     autoComplete="current-password"
                   />
                 </div>
+              </div>
+
+              <div className="flex justify-end">
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-xs text-indigo-400 transition-colors hover:text-indigo-300"
+                >
+                  Forgot password?
+                </Link>
               </div>
 
               <Button
